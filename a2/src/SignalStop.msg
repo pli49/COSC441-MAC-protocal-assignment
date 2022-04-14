@@ -1,0 +1,3 @@
+message SignalStop {
+    int  txAddress;
+}

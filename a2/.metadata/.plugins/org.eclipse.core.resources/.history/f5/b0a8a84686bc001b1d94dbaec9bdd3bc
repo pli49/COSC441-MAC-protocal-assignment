@@ -1,0 +1,54 @@
+/*
+ * CsmaMac.cc
+ *
+ */
+
+#include "CsmaMac.h"
+#include "AppMessage_m.h"
+#include <cmath>
+
+Define_Module(CsmaMac);
+
+using namespace omnetpp;
+
+
+// ===================================================================================
+// ===================================================================================
+//
+// Initialization and configuration
+//
+// ===================================================================================
+// ===================================================================================
+
+
+void CsmaMac::initialize(void)
+{
+    // read config values and check their validity
+    ownAddress = par("ownAddress");
+    bufferSize = par("bufferSize");
+    maxBackoffs = par("maxBackoffs");
+    maxAttempts = par("maxAttempts");
+    macOverheadSizeData = par("macOverheadSizeData");
+    macOverheadSizeAck = par("macOverheadSizeAck");
+    macAckDelay = par("macAckDelay");
+    ackTimeout = par("ackTimeout");
+
+    assert(bufferSize >= 0);
+    assert(maxBackoffs > 0);
+    assert(maxAttempts > 0);
+    assert(macOverheadSizeData > 0);
+    assert(macAckDelay > 0);
+    assert(ackTimeout > 0);
+
+    // gate id's
+    gidFromHigher = findGate("fromHigher");
+    gidToHigher = findGate("toHigher");
+    gidFromXcvr = findGate("fromTransceiver");
+    gidToXcvr = findGate("toTransceiver");
+
+    // initialize variables
+    AppMessage* macBuffer[bufferSize];
+
+}
+
+

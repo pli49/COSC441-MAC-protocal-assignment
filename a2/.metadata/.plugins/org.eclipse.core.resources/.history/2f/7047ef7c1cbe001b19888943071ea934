@@ -1,0 +1,322 @@
+/*
+ * CsmaMac.cc
+ *
+ */
+
+#include "CsmaMac.h"
+#include <cmath>
+#include "AppMessage_m.h"
+#include "AppResponse_m.h"
+#include "CSRequest_m.h"
+#include "CSResponse_m.h"
+#include "MacPacket_m.h"
+#include "TransmissionConfirmation_m.h"
+#include "TransmissionIndication_m.h"
+#include "TransmissionRequest_m.h"
+
+
+Define_Module(CsmaMac);
+
+using namespace omnetpp;
+
+
+// ===================================================================================
+// ===================================================================================
+//
+// Initialization and configuration
+//
+// ===================================================================================
+// ===================================================================================
+
+simsignal_t fullBufferDropSig = cComponent::registerSignal("fullBufferDrop");
+simsignal_t channelLossSig = cComponent::registerSignal("channelLoss");
+
+
+void CsmaMac::initialize(void)
+{
+    // read config values and check their validity
+    ownAddress = par("ownAddress");
+    bufferSize = par("bufferSize");
+    maxBackoffs = par("maxBackoffs");
+    maxAttempts = par("maxAttempts");
+    macOverheadSizeData = par("macOverheadSizeData"); // Check this?
+    macOverheadSizeAck = par("macOverheadSizeAck"); // Check this?
+    macAckDelay = par("macAckDelay");
+    ackTimeout = par("ackTimeout");
+
+    //the bufferSize module parameter has to be an integer larger than or equal to one.
+    assert(bufferSize >= 1);
+
+    assert(maxBackoffs > 0);
+    assert(maxAttempts > 0);
+    assert(macOverheadSizeData > 0);
+    assert(macOverheadSizeAck > 0);
+    assert(macAckDelay > 0);
+    assert(ackTimeout > 0);
+
+    // gate id's
+    gidFromApp = findGate("fromHigher");
+    gidToApp = findGate("toHigher");
+    gidFromXcvr = findGate("fromTransceiver");
+    gidToXcvr = findGate("toTransceiver");
+
+    // self messages
+    currMsg = nullptr;
+    csBackoffCompMsg = new cMessage("csBackoffComp");
+    retransmitCompMsg = new cMessage("retransmitComp");
+    ackTimeoutMsg = new cMessage("ackTimeout");
+
+    state = IDLE;
+
+    attemptCnt = 0;
+    backoffCnt = 0;
+}
+
+
+void CsmaMac::handleMessage(cMessage* msg)
+{
+    if ((msg->arrivedOn(gidFromXcvr)) && dynamic_cast<CSResponse*>(msg))
+    {
+        handleCSResponse((CSResponse*) msg);
+        return;
+    }
+    if ((msg->arrivedOn(gidFromXcvr)) && dynamic_cast<TransmissionConfirmation*>(msg))
+    {
+        handleTransmissionConfirmation((TransmissionConfirmation*) msg);
+        return;
+    }
+    if ((msg->arrivedOn(gidFromXcvr)) && dynamic_cast<TransmissionIndication*>(msg))
+    {
+        handleTransmissionIndication((TransmissionIndication*) msg);
+        return;
+    }
+    if ((msg->arrivedOn(gidFromApp)) && dynamic_cast<AppMessage*>(msg))
+    {
+        handleAppMessage((AppMessage*) msg);
+        return;
+    }
+    if (msg == ackTimeoutMsg)
+    {
+        handleAckTimeout();
+        return;
+    }
+    if (msg == retransmitCompMsg)
+    {
+        handleRetrasmitComp();
+        return;
+    }
+    if (msg == csBackoffCompMsg)
+    {
+        handleCsBackoff();
+        return;
+    }
+    error("CsmaMac::handleMessage: unexpected message");
+}
+
+/*If busyChannel is true, then the channel is considered busy
+ * (i.e. the total power received on the channel exceeds the carrier-sense threshold csThreshDBm),
+ * otherwise the channel is considered idle.
+ * After receiving an idle CSResponse a CSMA MAC will proceed to initiate the packet transmission process.
+ */
+void CsmaMac::handleCSResponse(CSResponse* csResp)
+{
+    EV << "Handling csresp msg" << endl;
+    assert(state == SENSE);
+
+    if (csResp->getBusyChannel()) {
+        csBackoff = par("csBackoffDistribution");
+        scheduleAt(simTime() + csBackoff, csBackoffCompMsg);
+        state = CSBACKOFF;
+    } else {
+        backoffCnt = 0;
+        TransmissionRequest *transReq = new TransmissionRequest();
+        transReq->encapsulate(currMsg->dup());
+        send(transReq, gidToXcvr);
+
+        state = TRANSMIT;
+    }
+    delete(csResp);
+}
+
+void CsmaMac::handleTransmissionConfirmation(TransmissionConfirmation* transConf)
+{
+    EV << "Handling transConf msg" << endl;
+
+    assert(state == TRANSMIT);
+    scheduleAt(simTime() + ackTimeout, ackTimeoutMsg);
+    state = ACK_LISTEN;
+    delete transConf;
+
+}
+
+void CsmaMac::handleTransmissionIndication(TransmissionIndication* transInd)
+{
+    EV << "Handling transInd msg" << endl;
+    MacPacket *decapMsg = dynamic_cast<MacPacket*>(transInd->decapsulate());
+    assert(decapMsg->getReceiverAddress() == ownAddress);
+    if (decapMsg->getMacPacketType() == MacDataPacket) {
+        handleDataPkt(decapMsg);
+    } else if (decapMsg->getMacPacketType() == MacAckPacket) {
+        handleAckPkt(decapMsg);
+    }
+    delete transInd;
+}
+
+void CsmaMac::handleAppMessage(AppMessage* appMsg)
+{
+    EV << "Handling appMsg msg" << endl;
+    // Check if buffer is full
+    if (macBuff.getLength() == bufferSize) {
+        EV << "Buffer full, dropping packet" << endl;
+        AppResponse *resp;
+        resp = new AppResponse();
+        resp->setSequenceNumber(appMsg->getSequenceNumber());
+        resp->setOutcome(BufferDrop);
+        EV << "Sending bufferDrop AppResponse message with seqNo="
+                << resp->getSequenceNumber() << endl;
+
+        send(resp, gidToApp);
+        delete appMsg;
+        emit(fullBufferDropSig, true);
+        return;
+    }
+    // If not full, add to buffer and check state
+    macBuff.insert(appMsg);
+    EV << "Appending appMsg to MAC buffer" << endl;
+
+    if (state == IDLE) {
+        beginMAC();
+    }
+}
+
+void CsmaMac::beginMAC()
+{
+    assert(state == IDLE);
+    assert(macBuff.getLength() > 0);
+    assert(currMsg != nullptr);
+
+    AppMessage *msg = dynamic_cast<AppMessage*>(macBuff.pop());
+    MacPacket *encapMsg = new MacPacket();
+//    macMsg->setByteLength(0);
+    encapMsg->setTransmitterAddress(ownAddress);
+    encapMsg->setReceiverAddress(msg->getReceiverAddress());
+    encapMsg->setMacPacketType(MacDataPacket);
+    encapMsg->encapsulate(msg);
+
+    EV << "Created data MacPacket with Rx address: "
+            << msg->getReceiverAddress() << ", and Tx address: "
+            << ownAddress << endl;
+
+    currMsg = encapMsg;
+    attemptTransmit();
+
+}
+
+void CsmaMac::attemptTransmit()
+{
+    attemptCnt++;
+    EV << "Transmission attempt number: " << attemptCnt << endl;
+    backoffCnt = 0;
+    carrierSenseAttempt();
+}
+
+void CsmaMac::carrierSenseAttempt()
+{
+    backoffCnt++;
+    EV << "Carrying out carrier sensing attempt: " << backoffCnt << endl;
+
+    CSRequest *csReq = new CSRequest();
+    send(csReq, gidToXcvr);
+    state = SENSE;
+}
+
+void CsmaMac::handleDataPkt(MacPacket* decapMsg)
+{
+    AppMessage *appMsg = dynamic_cast<AppMessage*>(decapMsg->decapsulate());
+    send(appMsg, gidToApp);
+    delete decapMsg;
+}
+
+void CsmaMac::handleAckPkt(MacPacket* decapMsg)
+{
+    assert(state == ACK_LISTEN);
+    cancelEvent(ackTimeoutMsg);
+
+    AppResponse *resp = new AppResponse();
+    assert(currMsg);
+    AppMessage *appMsg = dynamic_cast<AppMessage*>(currMsg->getEncapsulatedPacket());
+    resp->setSequenceNumber(appMsg->getSequenceNumber());
+    resp->setOutcome(Success);
+    send(resp, gidToApp);
+
+    delete decapMsg;
+    delete currMsg;
+    currMsg = nullptr;
+
+    state = IDLE;
+    if (macBuff.getLength() > 0){
+        beginMAC();
+    }
+}
+
+void CsmaMac::handleAckTimeout() // TODO: Merge this with handleMaxBackoff()
+{
+    EV << "ACK timed out" << endl;
+    attBackoff = par("attBackoffDistribution");
+    scheduleAt(simTime() + attBackoff, retransmitCompMsg);
+    state = RETRANSMIT;
+}
+
+void CsmaMac::handleMaxBackoff()
+{
+    EV << "Max backoffs reached" << endl;
+    attBackoff = par("attBackoffDistribution");
+    scheduleAt(simTime() + attBackoff, retransmitCompMsg);
+    state = RETRANSMIT;
+}
+
+void CsmaMac::handleRetrasmitComp()
+{
+    assert(state == RETRANSMIT);
+    if (attemptCnt < maxAttempts) {
+        attemptTransmit();
+    } else {
+        handleFailedTransmission();
+    }
+}
+
+void CsmaMac::handleCsBackoff()
+{
+    assert(state == BACKOFF);
+    if (backoffCnt < maxBackoffs) {
+        carrierSenseAttempt();
+    } else {
+        handleMaxBackoff();
+    }
+}
+
+void CsmaMac::handleFailedTransmission()
+{
+    EV << "Exceeded max attempts, sending failed appRespone to Application layer" << endl;
+    AppResponse *resp = new AppResponse();
+    assert(currMsg);
+    AppMessage *appMsg = dynamic_cast<AppMessage*>(currMsg->getEncapsulatedPacket());
+    resp->setSequenceNumber(appMsg->getSequenceNumber());
+    resp->setOutcome(ChannelFailure);
+    send(resp, gidToApp);
+    delete currMsg;
+    currMsg = nullptr;
+    emit(channelLossSig, true);
+
+    state = IDLE;
+    if (macBuff.getLength() > 0){
+        beginMAC();
+    }
+}
+
+CsmaMac::~CsmaMac()
+{
+    cancelAndDelete(currMsg);
+    cancelAndDelete(csBackoffCompMsg);
+    cancelAndDelete(ackTimeoutMsg);
+}

@@ -1,0 +1,3 @@
+message CSResponse {
+    bool     busyChannel;
+}

@@ -1,0 +1,372 @@
+23:34:32 **** Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+Application.cc
+Channel.cc
+CsmaMac.cc
+Transceiver.cc
+AppMessage_m.cc
+AppMessageStatus_m.cc
+AppResponse_m.cc
+CSRequest_m.cc
+CSResponse_m.cc
+MacPacket_m.cc
+MacPacketType_m.cc
+SignalStart_m.cc
+SignalStop_m.cc
+TransmissionConfirmation_m.cc
+TransmissionIndication_m.cc
+TransmissionRequest_m.cc
+Creating executable: ../out/clang-release/src/a2.exe
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+23:42:06 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+23:44:47 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+23:45:49 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+23:48:59 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+CsmaMac.cc
+CsmaMac.cc:55:15: error: out-of-line definition of 'handleMessage' does not match any declaration in 'CsmaMac'
+void CsmaMac::handleMessage(cMessage* msg)
+              ^~~~~~~~~~~~~
+1 error generated.
+make[1]: *** [Makefile:132: ../out/clang-release/src/CsmaMac.o] Error 1
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+make: *** [Makefile:2: all] Error 2
+"make MODE=release all" terminated with exit code 2. Build might be incomplete.
+23:51:47 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+CsmaMac.cc
+Creating executable: ../out/clang-release/src/a2.exe
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+23:53:01 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+10:51:56 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+CsmaMac.cc
+Creating executable: ../out/clang-release/src/a2.exe
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+11:06:24 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+CsmaMac.cc
+In file included from CsmaMac.cc:6:
+./CsmaMac.h:35:27: error: unknown type name 'AppMessage'; did you mean 'cMessage'?
+    void handleAppMessage(AppMessage *appMsg);
+                          ^~~~~~~~~~
+                          cMessage
+C:/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/include/omnetpp/envirext.h:34:7: note: 'cMessage' declared here
+class cMessage;
+      ^
+CsmaMac.cc:140:15: error: out-of-line definition of 'handleAppMessage' does not match any declaration in 'CsmaMac'
+void CsmaMac::handleAppMessage(AppMessage *appMsg){
+              ^~~~~~~~~~~~~~~~
+CsmaMac.cc:142:20: error: no member named 'getLength' in 'omnetpp::cMessage'
+    if (macBuffer->getLength < bufferSize)
+        ~~~~~~~~~  ^
+CsmaMac.cc:143:1: error: expected statement
+}
+^
+4 errors generated.
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+make[1]: *** [Makefile:132: ../out/clang-release/src/CsmaMac.o] Error 1
+make: *** [Makefile:2: all] Error 2
+"make MODE=release all" terminated with exit code 2. Build might be incomplete.
+11:11:37 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+CsmaMac.cc
+In file included from CsmaMac.cc:6:
+./CsmaMac.h:35:27: error: unknown type name 'AppMessage'; did you mean 'cMessage'?
+    void handleAppMessage(AppMessage *appMsg);
+                          ^~~~~~~~~~
+                          cMessage
+C:/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/include/omnetpp/envirext.h:34:7: note: 'cMessage' declared here
+class cMessage;
+      ^
+CsmaMac.cc:140:15: error: out-of-line definition of 'handleAppMessage' does not match any declaration in 'CsmaMac'
+void CsmaMac::handleAppMessage(AppMessage *appMsg){
+              ^~~~~~~~~~~~~~~~
+2 errors generated.
+make[1]: *** [Makefile:132: ../out/clang-release/src/CsmaMac.o] Error 1
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+make: *** [Makefile:2: all] Error 2
+"make MODE=release all" terminated with exit code 2. Build might be incomplete.
+11:16:57 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+CsmaMac.cc
+Creating executable: ../out/clang-release/src/a2.exe
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+11:20:22 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+CsmaMac.cc
+CsmaMac.cc:142:14: error: member reference type 'omnetpp::cMessage *' is a pointer; did you mean to use '->'?
+    macBuffer.length();
+    ~~~~~~~~~^
+             ->
+CsmaMac.cc:142:15: error: no member named 'length' in 'omnetpp::cMessage'
+    macBuffer.length();
+    ~~~~~~~~~ ^
+2 errors generated.
+make[1]: *** [Makefile:132: ../out/clang-release/src/CsmaMac.o] Error 1
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+make: *** [Makefile:2: all] Error 2
+"make MODE=release all" terminated with exit code 2. Build might be incomplete.
+11:31:25 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+CsmaMac.cc
+CsmaMac.cc:142:18: error: member reference type 'omnetpp::cMessage *' is a pointer; did you mean to use '->'?
+    if (macBuffer.getLength() > bufferSize) {
+        ~~~~~~~~~^
+                 ->
+CsmaMac.cc:142:19: error: no member named 'getLength' in 'omnetpp::cMessage'
+    if (macBuffer.getLength() > bufferSize) {
+        ~~~~~~~~~ ^
+CsmaMac.cc:144:25: error: member reference type 'omnetpp::cMessage *' is a pointer; did you mean to use '->'?
+    } else if (macBuffer.getLength() == bufferSize) {
+               ~~~~~~~~~^
+                        ->
+CsmaMac.cc:144:26: error: no member named 'getLength' in 'omnetpp::cMessage'
+    } else if (macBuffer.getLength() == bufferSize) {
+               ~~~~~~~~~ ^
+CsmaMac.cc:146:9: error: unknown type name 'AppResponse'
+        AppResponse *response = new AppResponse();
+        ^
+CsmaMac.cc:146:37: error: unknown type name 'AppResponse'
+        AppResponse *response = new AppResponse();
+                                    ^
+CsmaMac.cc:148:30: error: use of undeclared identifier 'DROP'
+        response->setOutcome(DROP);
+                             ^
+CsmaMac.cc:152:24: error: use of undeclared identifier 'toAppLayerGateId'
+        send(response, toAppLayerGateId);
+                       ^
+CsmaMac.cc:153:14: error: use of undeclared identifier 'droppedAtBufferSigId'
+        emit(droppedAtBufferSigId, true);
+             ^
+CsmaMac.cc:159:14: error: member reference type 'omnetpp::cMessage *' is a pointer; did you mean to use '->'?
+    macBuffer.insert(appMsg);
+    ~~~~~~~~~^
+             ->
+CsmaMac.cc:159:15: error: no member named 'insert' in 'omnetpp::cMessage'
+    macBuffer.insert(appMsg);
+    ~~~~~~~~~ ^
+CsmaMac.cc:161:27: error: member reference type 'omnetpp::cMessage *' is a pointer; did you mean to use '->'?
+              << macBuffer.getLength() << endl;
+                 ~~~~~~~~~^
+                          ->
+CsmaMac.cc:161:28: error: no member named 'getLength' in 'omnetpp::cMessage'
+              << macBuffer.getLength() << endl;
+                 ~~~~~~~~~ ^
+CsmaMac.cc:164:9: error: use of undeclared identifier 'state'; did you mean 'stat'?
+    if (state == IDLE) {
+        ^~~~~
+        stat
+C:\Omnet++\omnetpp-5.6.2-src-windows\omnetpp-5.6.2\tools\win64\mingw64\x86_64-w64-mingw32\include\sys/stat.h:174:13: note: 'stat' declared here
+int __cdecl stat(const char *_Filename,struct stat *_Stat);
+            ^
+CsmaMac.cc:164:18: error: use of undeclared identifier 'IDLE'
+    if (state == IDLE) {
+                 ^
+CsmaMac.cc:165:22: error: member reference type 'omnetpp::cMessage *' is a pointer; did you mean to use '->'?
+        if (macBuffer.getLength() != 1) {
+            ~~~~~~~~~^
+                     ->
+CsmaMac.cc:165:23: error: no member named 'getLength' in 'omnetpp::cMessage'
+        if (macBuffer.getLength() != 1) {
+            ~~~~~~~~~ ^
+CsmaMac.cc:168:9: error: use of undeclared identifier 'startMacProcess'
+        startMacProcess();
+        ^
+18 errors generated.
+make[1]: *** [Makefile:132: ../out/clang-release/src/CsmaMac.o] Error 1
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+make: *** [Makefile:2: all] Error 2
+"make MODE=release all" terminated with exit code 2. Build might be incomplete.
+11:39:13 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+CsmaMac.cc
+CsmaMac.cc:142:43: error: extraneous ')' after condition, expected a statement
+    if ((qHead + 1) % bufferSize == qTail)) {
+                                          ^
+CsmaMac.cc:144:25: error: member reference type 'omnetpp::cMessage *' is a pointer; did you mean to use '->'?
+    } else if (macBuffer.getLength() == bufferSize) {
+               ~~~~~~~~~^
+                        ->
+CsmaMac.cc:144:26: error: no member named 'getLength' in 'omnetpp::cMessage'
+    } else if (macBuffer.getLength() == bufferSize) {
+               ~~~~~~~~~ ^
+CsmaMac.cc:146:9: error: unknown type name 'AppResponse'
+        AppResponse *response = new AppResponse();
+        ^
+CsmaMac.cc:146:37: error: unknown type name 'AppResponse'
+        AppResponse *response = new AppResponse();
+                                    ^
+CsmaMac.cc:148:30: error: use of undeclared identifier 'DROP'
+        response->setOutcome(DROP);
+                             ^
+CsmaMac.cc:152:24: error: use of undeclared identifier 'toAppLayerGateId'
+        send(response, toAppLayerGateId);
+                       ^
+CsmaMac.cc:153:14: error: use of undeclared identifier 'droppedAtBufferSigId'
+        emit(droppedAtBufferSigId, true);
+             ^
+CsmaMac.cc:159:14: error: member reference type 'omnetpp::cMessage *' is a pointer; did you mean to use '->'?
+    macBuffer.insert(appMsg);
+    ~~~~~~~~~^
+             ->
+CsmaMac.cc:159:15: error: no member named 'insert' in 'omnetpp::cMessage'
+    macBuffer.insert(appMsg);
+    ~~~~~~~~~ ^
+CsmaMac.cc:161:27: error: member reference type 'omnetpp::cMessage *' is a pointer; did you mean to use '->'?
+              << macBuffer.getLength() << endl;
+                 ~~~~~~~~~^
+                          ->
+CsmaMac.cc:161:28: error: no member named 'getLength' in 'omnetpp::cMessage'
+              << macBuffer.getLength() << endl;
+                 ~~~~~~~~~ ^
+CsmaMac.cc:164:9: error: use of undeclared identifier 'state'; did you mean 'stat'?
+    if (state == IDLE) {
+        ^~~~~
+        stat
+C:\Omnet++\omnetpp-5.6.2-src-windows\omnetpp-5.6.2\tools\win64\mingw64\x86_64-w64-mingw32\include\sys/stat.h:174:13: note: 'stat' declared here
+int __cdecl stat(const char *_Filename,struct stat *_Stat);
+            ^
+CsmaMac.cc:164:18: error: use of undeclared identifier 'IDLE'
+    if (state == IDLE) {
+                 ^
+CsmaMac.cc:165:22: error: member reference type 'omnetpp::cMessage *' is a pointer; did you mean to use '->'?
+        if (macBuffer.getLength() != 1) {
+            ~~~~~~~~~^
+                     ->
+CsmaMac.cc:165:23: error: no member named 'getLength' in 'omnetpp::cMessage'
+        if (macBuffer.getLength() != 1) {
+            ~~~~~~~~~ ^
+CsmaMac.cc:168:9: error: use of undeclared identifier 'startMacProcess'
+        startMacProcess();
+        ^
+17 errors generated.
+make[1]: *** [Makefile:132: ../out/clang-release/src/CsmaMac.o] Error 1
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+make: *** [Makefile:2: all] Error 2
+"make MODE=release all" terminated with exit code 2. Build might be incomplete.
+11:39:43 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+CsmaMac.cc
+CsmaMac.cc:144:25: error: member reference type 'omnetpp::cMessage *' is a pointer; did you mean to use '->'?
+    } else if (macBuffer.getLength() == bufferSize) {
+               ~~~~~~~~~^
+                        ->
+CsmaMac.cc:144:26: error: no member named 'getLength' in 'omnetpp::cMessage'
+    } else if (macBuffer.getLength() == bufferSize) {
+               ~~~~~~~~~ ^
+CsmaMac.cc:146:9: error: unknown type name 'AppResponse'
+        AppResponse *response = new AppResponse();
+        ^
+CsmaMac.cc:146:37: error: unknown type name 'AppResponse'
+        AppResponse *response = new AppResponse();
+                                    ^
+CsmaMac.cc:148:30: error: use of undeclared identifier 'DROP'
+        response->setOutcome(DROP);
+                             ^
+CsmaMac.cc:152:24: error: use of undeclared identifier 'toAppLayerGateId'
+        send(response, toAppLayerGateId);
+                       ^
+CsmaMac.cc:153:14: error: use of undeclared identifier 'droppedAtBufferSigId'
+        emit(droppedAtBufferSigId, true);
+             ^
+CsmaMac.cc:159:14: error: member reference type 'omnetpp::cMessage *' is a pointer; did you mean to use '->'?
+    macBuffer.insert(appMsg);
+    ~~~~~~~~~^
+             ->
+CsmaMac.cc:159:15: error: no member named 'insert' in 'omnetpp::cMessage'
+    macBuffer.insert(appMsg);
+    ~~~~~~~~~ ^
+CsmaMac.cc:161:27: error: member reference type 'omnetpp::cMessage *' is a pointer; did you mean to use '->'?
+              << macBuffer.getLength() << endl;
+                 ~~~~~~~~~^
+                          ->
+CsmaMac.cc:161:28: error: no member named 'getLength' in 'omnetpp::cMessage'
+              << macBuffer.getLength() << endl;
+                 ~~~~~~~~~ ^
+CsmaMac.cc:164:9: error: use of undeclared identifier 'state'; did you mean 'stat'?
+    if (state == IDLE) {
+        ^~~~~
+        stat
+C:\Omnet++\omnetpp-5.6.2-src-windows\omnetpp-5.6.2\tools\win64\mingw64\x86_64-w64-mingw32\include\sys/stat.h:174:13: note: 'stat' declared here
+int __cdecl stat(const char *_Filename,struct stat *_Stat);
+            ^
+CsmaMac.cc:164:18: error: use of undeclared identifier 'IDLE'
+    if (state == IDLE) {
+                 ^
+CsmaMac.cc:165:22: error: member reference type 'omnetpp::cMessage *' is a pointer; did you mean to use '->'?
+        if (macBuffer.getLength() != 1) {
+            ~~~~~~~~~^
+                     ->
+CsmaMac.cc:165:23: error: no member named 'getLength' in 'omnetpp::cMessage'
+        if (macBuffer.getLength() != 1) {
+            ~~~~~~~~~ ^
+CsmaMac.cc:168:9: error: use of undeclared identifier 'startMacProcess'
+        startMacProcess();
+        ^
+16 errors generated.
+make[1]: *** [Makefile:132: ../out/clang-release/src/CsmaMac.o] Error 1
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+make: *** [Makefile:2: all] Error 2
+"make MODE=release all" terminated with exit code 2. Build might be incomplete.
+17:46:24 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+CsmaMac.cc
+Creating executable: ../out/clang-release/src/a2.exe
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+18:06:24 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+18:51:03 **** Incremental Build of configuration release for project a2 ****
+make MODE=release all 
+cd src && /usr/bin/make
+make[1]: Entering directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/c/Omnet++/omnetpp-5.6.2-src-windows/omnetpp-5.6.2/samples/omnet_mac_protocol/a2/src'

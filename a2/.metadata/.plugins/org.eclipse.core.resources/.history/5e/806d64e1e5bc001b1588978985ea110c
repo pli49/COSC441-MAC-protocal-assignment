@@ -1,0 +1,143 @@
+/*
+ * CsmaMac.cc
+ *
+ */
+
+#include "CsmaMac.h"
+#include "AppMessage_m.h"
+#include <cmath>
+
+Define_Module(CsmaMac);
+
+using namespace omnetpp;
+
+
+// ===================================================================================
+// ===================================================================================
+//
+// Initialization and configuration
+//
+// ===================================================================================
+// ===================================================================================
+
+
+void CsmaMac::initialize(void)
+{
+    // read config values and check their validity
+    ownAddress = par("ownAddress");
+    bufferSize = par("bufferSize");
+    maxBackoffs = par("maxBackoffs");
+    maxAttempts = par("maxAttempts");
+    macOverheadSizeData = par("macOverheadSizeData");
+    macOverheadSizeAck = par("macOverheadSizeAck");
+    macAckDelay = par("macAckDelay");
+    ackTimeout = par("ackTimeout");
+
+    assert(bufferSize >= 1);
+    assert(maxBackoffs > 0);
+    assert(maxAttempts > 0);
+    assert(macOverheadSizeData > 0);
+    assert(macAckDelay > 0);
+    assert(ackTimeout > 0);
+
+    // gate id's
+    gidFromHigher = findGate("fromHigher");
+    gidToHigher = findGate("toHigher");
+    gidFromXcvr = findGate("fromTransceiver");
+    gidToXcvr = findGate("toTransceiver");
+
+    // self messages
+    readBuffSig = new cMessage("CsmaMac::readBuff");
+
+    // FIFO queue variables
+    macBuffer = new cMessage[bufferSize];
+    qHead = 0;
+    qTail = 0;
+}
+
+
+
+bool CsmaMac::writeBuff(cMessage* msg)
+{
+    if ((qHead + 1) % bufferSize == qTail) {
+        return false;
+    }
+    macBuffer[qHead] = *msg;
+    qHead = (qHead + 1) % bufferSize;
+    return true;
+}
+
+cMessage CsmaMac::readBuff()
+{
+    if (qTail == qHead) {
+        return cMessage();
+    }
+    cMessage msgOut = macBuffer[qTail];
+    macBuffer[qTail] = cMessage();
+    qTail = (qTail + 1) % bufferSize;
+    return msgOut;
+}
+
+
+void CsmaMac::handleMessage(cMessage* msg)
+{
+    if (dynamic_cast<AppMessage*>(msg))
+    {
+        if (writeBuff(msg))
+        {
+            EV << "Written message to buffer";
+            return;
+        } else {
+            EV << "Full buffer, deleting message";
+            delete(msg);
+            //send nack or something
+            return;
+        }
+    }
+
+//    if (msg == readBuff){
+//
+//        if ((msg->arrivedOn(gidFromXcvr)) && dynamic_cast<CSResponse*>(msg))
+//        {
+//    //        handleSignalStart((SignalStart*) msg);
+//    //        dbg_leave("handleMessage");
+//            return;
+//        }
+//
+//        if ((msg->arrivedOn(gidFromXcvr)) && dynamic_cast<TransmissionConfirmation*>(msg))
+//        {
+//    //        handleSignalStop((SignalStop*) msg);
+//    //        dbg_leave("handleMessage");
+//            return;
+//        }
+//
+//        if ((msg->arrivedOn(gidFromXcvr)) && dynamic_cast<TransmissionIndication*>(msg))
+//        {
+//    //        handleCSRequest((CSRequest*) msg);
+//    //        dbg_leave("handleMessage");
+//            return;
+//        }
+//
+//        if ((msg->arrivedOn(gidFromXcvr)) && dynamic_cast<AppMessage*>(msg))
+//        {
+//    //        handleTransmissionRequest((TransmissionRequest*) msg);
+//    //        dbg_leave("handleMessage");
+//            return;
+//        }
+//
+//    //    if (msg == csComplete)
+//    //    {
+//    ////        handleCsComplete();
+//    ////        dbg_leave("handleMessage");
+//    //        return;
+//    //    }
+//    }
+
+    error("CsmaMac::handleMessage: unexpected message");
+
+}
+
+void CsmaMac::handleAppMessage(AppMessage *appMsg){
+    //check buffer size
+
+}

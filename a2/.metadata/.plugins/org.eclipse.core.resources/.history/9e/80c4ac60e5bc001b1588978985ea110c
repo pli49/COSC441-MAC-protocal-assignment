@@ -1,0 +1,73 @@
+/*
+ * CsmaMac.h
+ *
+ */
+
+#ifndef CSMAMAC_H_
+#define CSMAMAC_H_
+
+#include <omnetpp.h>
+// further includes ...
+
+
+using namespace omnetpp;
+
+
+// design a state machine and suitable states, name them here ..
+enum MacState {
+  example_state1 = 0,
+};
+
+
+
+// string names for your states (for debugging purposes)
+const char * const stateStrings[] = {
+  "example_state1"
+};
+
+
+class CsmaMac : public cSimpleModule {
+
+public:
+  // your public methods and data members
+    void initialize();
+    void handleMessage(cMessage* msg);
+    void handleAppMessage(appMessage *appMsg);
+
+protected:
+
+  // your protected methods and data members
+    int ownAddress;
+    int bufferSize;
+    int maxBackoffs;
+    int maxAttempts;
+    int macOverheadSizeData;
+    int macOverheadSizeAck;   // Overhead for a MAC acknowledgement
+    double macAckDelay;             // fixed waiting time for sending ACK
+    double ackTimeout;
+
+    // gates
+    int gidFromHigher;
+    int gidToHigher;
+    int gidFromXcvr;
+    int gidToXcvr;
+
+    // self messages
+    cMessage* readBuffSig;
+
+    // buffer
+    cMessage* macBuffer;
+    int qHead;
+    int qTail;
+
+
+private:
+
+    // your private methods and data members
+    bool writeBuff(cMessage* msg);
+    cMessage readBuff(void);
+
+};
+
+
+#endif /* CSMAMAC_H_ */
